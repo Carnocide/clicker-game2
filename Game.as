@@ -4,6 +4,7 @@
 	import flash.sampler.NewObjectSample;
 	import flash.events.Event;
 	import flash.utils.Timer;
+	import flash.events.MouseEvent;
 
 	/**
 	 * This is the controller class for the entire Game.
@@ -14,15 +15,34 @@
 		 * This array should only hold SnowObjects
 		 */
 		var snowflakes: Array = new Array();
+		/**
+		* Boolean value to turn on the wind the next game loop
+		*/
 		var needsToChangeWind: Boolean = false;
+		/**
+		* The direction and speed of the wind
+		*/
 		public var windValue: Number = 0;
+		/**
+		* Number of snowflakes at the start
+		*/
 		var initialSnowflakes = 100;
+		/**
+		* flag for game over state
+		*/
 		var isGameOver: Boolean = false;
-
+		/**
+		* The speed and direction of the goal platform.
+		*/
 		var goalVelocityX = 5; // No use creating a new class if velocity is the only part of its state that will change. (considering the scale of this game)
-
+		/**
+		* number of points
+		*/
 		var score: int = 0;
 
+		/**
+		* For tracking time
+		*/
 		var gameTimer: StopWatch = new StopWatch;
 		/**
 		 * The number of frames to wait before spawning a new SnowObject
@@ -45,6 +65,7 @@
 			gameTimer.start();
 			addEventListener(Event.ENTER_FRAME, gameLoop);
 			addEventListener("CHANGE_WIND", changeWind);
+			resetButton.addEventListener(MouseEvent.MOUSE_DOWN, resetGame);
 		} // end Game Constructor
 
 		/**
@@ -62,15 +83,15 @@
 					this.goalVelocityX *= -1;
 				}
 				this.updateSnowflakes();
-				if (score >= 1) {
+				if (score >= 10) {
 					this.isGameOver = true;
 				}
 
 				goal.x += goalVelocityX;
-			}
-			else {
+			} else {
 				gameOver.visible = true;
 				resetButton.visible = true;
+
 			}
 
 
@@ -107,6 +128,7 @@
 					snowflakes[i].isDead = true;
 					score++;
 					trace(score);
+					this.goalVelocityX -= 0.3;
 
 				} // end collision check
 				count.text = "Count: " + this.score.toString();
@@ -125,6 +147,28 @@
 			} // end for
 		} // end updateSnowflakes
 
+		/**
+		*	Resets the game
+		* @param e the event handler object
+		*/ 
+		private function resetGame(e: Event): void {
+			resetButton.visible = false;
+			gameOver.visible = false;
+			score = 0;
+			this.isGameOver = false;
+			for (var i = 0; i < snowflakes.length; i++) {
+				snowflakes[i].y = 0;
+				this.windValue = 0;
+			}
+			gameTimer.start();
+
+
+		}
+		
+		/**
+		* Function for changing the wind, sets direction and speed.
+		* @param e the event handler object
+		*/
 		private function changeWind(e: Event): void {
 			trace("Changed Wind");
 			this.needsToChangeWind = true;

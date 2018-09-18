@@ -11,17 +11,26 @@
 		 * Determines the rate at which the snow falls
 		 */
 		var velocityY: Number;
+		
+		/**
+		* The direction of the snowflake in the x direction.
+		*/
 		public var velocityX: Number;
 
 		/**
 		 * Tracks if the snow is dead. If it is dead, it is destroyed. Somber
 		 */
 		var isDead: Boolean = false;
+		
+		/**
+		* Boolean flag to determine if the snowflake has been clicked
+		*/
 		public var hasBeenClicked: Boolean = false;
 
 		/**
 		 * This is the constructor for the SnowObject.
 		 * It instantiates any variables if necessary and is run when the object is created
+		 * @param game The game instance the snowflake belongs to.
 		 */
 		public function SnowObject(game: Game) {
 			// constructor code
